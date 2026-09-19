@@ -1,12 +1,12 @@
 package rest
 
-type MobCreateRequest struct {
+type MobSpawnRequest struct {
 	Id   string
 	Name string
 	Lvl  string
 	Hp   int
 }
-type MobCreateResponse struct {
+type MobSpawnResponse struct {
 	Id string
 }
 
