@@ -1,4 +1,4 @@
-package rest
+package model
 
 type MobSpawnRequest struct {
 	Id   string
@@ -22,10 +22,10 @@ type MobSeeRequest struct {
 	Id string
 }
 type MobSeeResponse struct {
-	Id   string
-	Name string
-	Lvl  string
-	Hp   int
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	Lvl  string `json:"lvl"`
+	Hp   int    `json:"hp"`
 }
 
 type MobHitRequest struct {

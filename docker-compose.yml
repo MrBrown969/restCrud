@@ -1,0 +1,16 @@
+name: mob-pool-service
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mob-pool-postgres
+    environment:
+      POSTGRES_DB: mobs
+      POSTGRES_USER: crud_repo
+      POSTGRES_PASSWORD: 12345678
+    ports:
+      - "5432:5432"
+    volumes:
+      - mob-pool-persistent-data:/var/lib/postgresql/data
+      - ./cmd/db/migration/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  mob-pool-persistent-data:
