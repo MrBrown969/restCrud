@@ -16,7 +16,7 @@ type ISpawnMobUsecase interface {
 }
 
 type ISlayMobUsecase interface {
-	Slay()
+	Slay(id string) error
 }
 
 type IHitMobUsecase interface {
@@ -28,7 +28,8 @@ type ISeeMobUsecase interface {
 }
 
 type MobController struct {
-	SeeUsecase ISeeMobUsecase
+	SeeUsecase  ISeeMobUsecase
+	SlayUsecase ISlayMobUsecase
 }
 
 func New(see *ISeeMobUsecase) *MobController {
@@ -64,4 +65,15 @@ func respondWithJSON(w http.ResponseWriter, code int, payload any) {
 		fmt.Println(fmt.Errorf("failed to encode response %s", err))
 		return
 	}
+}
+
+func (c *MobController) Slay(w http.ResponseWriter, r *http.Request) {
+	err := c.SlayUsecase.Slay(r.PathValue("id"))
+	if err != nil {
+		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"error while slaying mob": err.Error()})
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, nil)
+
 }

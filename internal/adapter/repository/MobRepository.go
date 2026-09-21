@@ -29,3 +29,17 @@ func (m *MobRepository) Get(id string) (*entity.Mob, error) {
 
 	return mob, nil
 }
+
+func (m *MobRepository) Delete(id string) error {
+	query := `DELETE FROM mobs WHERE id = $1;`
+
+	result, err := m.Db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	if rowsNum, _ := result.RowsAffected(); rowsNum == 0 {
+		return fmt.Errorf("failed to delete by id: %w", err)
+	}
+	return nil
+}
