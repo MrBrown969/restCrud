@@ -12,7 +12,7 @@ import (
 
 // /mob-pool/
 type ISpawnMobUsecase interface {
-	Spawn()
+	Spawn(name string, lvl string) (*string, error)
 }
 
 type ISlayMobUsecase interface {
@@ -28,8 +28,9 @@ type ISeeMobUsecase interface {
 }
 
 type MobController struct {
-	SeeUsecase  ISeeMobUsecase
-	SlayUsecase ISlayMobUsecase
+	SeeUsecase   ISeeMobUsecase
+	SlayUsecase  ISlayMobUsecase
+	SpawnUsecase ISpawnMobUsecase
 }
 
 func New(see *ISeeMobUsecase) *MobController {
@@ -75,5 +76,33 @@ func (c *MobController) Slay(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusOK, nil)
+}
 
+func (c *MobController) Spawn(w http.ResponseWriter, r *http.Request) {
+	var input model.MobSpawnRequest
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		fmt.Println(err)
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "wrong request body"})
+	}
+
+	name := input.Name
+	if name == nil {
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "name is required"})
+	}
+
+	lvl := input.Lvl
+	if lvl == nil {
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "lvl is required"})
+	}
+
+	id, err := c.SpawnUsecase.Spawn(*name, *lvl)
+
+	if err != nil {
+		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return
+	}
+
+	spawnResponse := model.MobSpawnResponse{Id: *id}
+	respondWithJSON(w, http.StatusOK, spawnResponse)
 }

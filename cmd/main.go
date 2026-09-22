@@ -23,16 +23,19 @@ func main() {
 
 	seeUsecase := usecase.SeeMobUsecase{Repo: repo}
 	slayUsecase := usecase.SlayMobUsecase{Repo: repo}
+	spawnUsecase := usecase.SpawnMobUsecase{Repo: repo}
 
 	controller := rest.MobController{
-		SeeUsecase:  &seeUsecase,
-		SlayUsecase: &slayUsecase,
+		SeeUsecase:   &seeUsecase,
+		SlayUsecase:  &slayUsecase,
+		SpawnUsecase: &spawnUsecase,
 	}
 
 	server := http.NewServeMux()
 
 	server.HandleFunc("GET /mob-pool/", controller.See)
 	server.HandleFunc("DELETE /mob-pool/{id}", controller.Slay)
+	server.HandleFunc("POST /mob-pool/", controller.Spawn)
 	err := http.ListenAndServe(":8080", server)
 	if err != nil {
 		fmt.Println(err)

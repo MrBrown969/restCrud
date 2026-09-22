@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/MrBrown969/restCrud/internal/adapter/repository/model"
@@ -41,5 +42,21 @@ func (m *MobRepository) Delete(id string) error {
 	if rowsNum, _ := result.RowsAffected(); rowsNum == 0 {
 		return fmt.Errorf("failed to delete by id: %w", err)
 	}
+	return nil
+}
+
+func (m *MobRepository) Create(name string, lvl string, id string, hp int) error {
+	query := "INSERT INTO mobs (id, name, lvl, hp) VALUES ($1, $2, $3, $4);"
+
+	result, err := m.Db.Exec(query, id, name, lvl, hp)
+
+	if err != nil {
+		return err
+	}
+
+	if count, _ := result.RowsAffected(); count == 0 {
+		return errors.New("failed to insert mob")
+	}
+
 	return nil
 }

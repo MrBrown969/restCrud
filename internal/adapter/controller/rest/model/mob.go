@@ -1,13 +1,11 @@
 package model
 
 type MobSpawnRequest struct {
-	Id   string
-	Name string
-	Lvl  string
-	Hp   int
+	Name *string
+	Lvl  *string
 }
 type MobSpawnResponse struct {
-	Id string
+	Id string `json:"id"`
 }
 
 type MobSlayRequest struct {
