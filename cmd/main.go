@@ -17,6 +17,12 @@ func main() {
 		log.Fatalf(fmt.Sprintf("error connecting to database: %s", dbErr))
 	}
 
+	defer func() {
+		if closeErr := db.Close(); closeErr != nil {
+			fmt.Printf("error closing database connection: %s", closeErr)
+		}
+	}()
+
 	repo := &repository.MobRepository{
 		Db: db,
 	}
