@@ -60,3 +60,15 @@ func (m *MobRepository) Create(name string, lvl string, id string, hp int) error
 
 	return nil
 }
+
+func (m *MobRepository) Update(id string, damage int) (*int, error) {
+	var hp int
+	query := "UPDATE mobs SET hp = hp - $1 WHERE id = $2 returning hp;"
+
+	if err := m.Db.Get(&hp, query, damage, id); err != nil {
+		return nil, err
+	}
+
+	return &hp, nil
+
+}

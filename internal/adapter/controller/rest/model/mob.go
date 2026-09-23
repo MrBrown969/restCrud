@@ -31,6 +31,6 @@ type MobHitRequest struct {
 	Damage *int
 }
 type MobHitResponse struct {
-	Id string
-	Hp int
+	Id string `json:"id"`
+	Hp int    `json:"hp"`
 }
